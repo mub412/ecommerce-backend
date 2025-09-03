@@ -108,3 +108,6 @@ func init() {
 	productList = append(productList, prd4)
 
 }
+
+
+for testing purpose
