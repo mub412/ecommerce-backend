@@ -18,10 +18,6 @@ var productList []Product
 
 func getProducts(w http.ResponseWriter, r *http.Request) {
 	handleCors(w)
-	if r.Method != "GET" {
-		http.Error(w, "Please give me GET request", 400)
-		return
-	}
 	sendData(w, productList, 200)
 }
 
@@ -31,11 +27,6 @@ func createProducts(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 		return
 	}
-	if r.Method != "POST" {
-		http.Error(w, "Please give me POST request", 400)
-		return
-	}
-
 	var newProduct Product
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newProduct)
@@ -50,7 +41,7 @@ func createProducts(w http.ResponseWriter, r *http.Request) {
 }
 func handleCors(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
 }
@@ -62,8 +53,8 @@ func sendData(w http.ResponseWriter, data interface{}, statusCode int) {
 }
 func main() {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/products", getProducts)
-	mux.HandleFunc("/create", createProducts)
+	mux.Handle("GET /products", http.HandlerFunc(getProducts))
+	mux.Handle("POST /create", http.HandlerFunc(createProducts))
 
 	fmt.Println("Server running on : 8080")
 	err := http.ListenAndServe(":8080", mux)
