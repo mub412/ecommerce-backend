@@ -17,13 +17,12 @@ type Product struct {
 var productList []Product
 
 func getProducts(w http.ResponseWriter, r *http.Request) {
-	handleCors(w)
+
 	sendData(w, productList, 200)
 }
 
 func createProducts(w http.ResponseWriter, r *http.Request) {
-	handleCors(w)
-	handlePreflightReq(w, r)
+
 	var newProduct Product
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newProduct)
@@ -36,17 +35,7 @@ func createProducts(w http.ResponseWriter, r *http.Request) {
 	productList = append(productList, newProduct)
 	sendData(w, newProduct, 201)
 }
-func handleCors(w http.ResponseWriter) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Content-Type", "application/json")
-}
-func handlePreflightReq(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(200)
-	}
-}
+
 func sendData(w http.ResponseWriter, data interface{}, statusCode int) {
 	w.WriteHeader(statusCode)
 	encoder := json.NewEncoder(w)
@@ -56,9 +45,9 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("GET /products", http.HandlerFunc(getProducts))
 	mux.Handle("POST /create", http.HandlerFunc(createProducts))
-
+	globalRouter := globalRouter(mux)
 	fmt.Println("Server running on : 8080")
-	err := http.ListenAndServe(":8080", mux)
+	err := http.ListenAndServe(":8080", globalRouter)
 	if err != nil {
 		fmt.Println("Error starting the server", err)
 	}
@@ -99,4 +88,18 @@ func init() {
 	productList = append(productList, prd3)
 	productList = append(productList, prd4)
 
+}
+
+func globalRouter(mux *http.ServeMux) http.Handler {
+	handleAllReq := func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Content-Type", "application/json")
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(200)
+		}
+		mux.ServeHTTP(w, r)
+	}
+	return http.HandlerFunc(handleAllReq)
 }
