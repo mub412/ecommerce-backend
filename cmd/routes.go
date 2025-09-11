@@ -11,6 +11,7 @@ func initRoutes(mux *http.ServeMux, manager *middleware.Manager) {
 		"GET /uddin",
 		manager.With(
 			http.HandlerFunc(handlers.Test),
+			middleware.Arekta,
 		),
 	)
 	mux.Handle(
