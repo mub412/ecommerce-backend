@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"ecommerce/handlers"
 	"ecommerce/middleware"
+	"ecommerce/rest/handlers"
 	"net/http"
 )
 
