@@ -1,17 +1,17 @@
-package cmd
+package rest
 
 import (
-	"ecommerce/middleware"
 	"ecommerce/rest/handlers"
+	"ecommerce/rest/middlewares"
 	"net/http"
 )
 
-func initRoutes(mux *http.ServeMux, manager *middleware.Manager) {
+func initRoutes(mux *http.ServeMux, manager *middlewares.Manager) {
 	mux.Handle(
 		"GET /uddin",
 		manager.With(
 			http.HandlerFunc(handlers.Test),
-			middleware.Arekta,
+			middlewares.Arekta,
 		),
 	)
 	mux.Handle(
