@@ -13,7 +13,7 @@ type Header struct {
 }
 
 type Payload struct {
-	Sub         string `json:"sub"` //usr id
+	Sub         int    `json:"sub"` //usr id
 	FirstName   string `json:"first_name"`
 	LastName    string `json:"last_name"`
 	Email       string `json:"email"`

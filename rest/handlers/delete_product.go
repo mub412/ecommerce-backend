@@ -16,5 +16,6 @@ func DeleteProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	database.Delete(pId)
+
 	util.SendData(w, "Successfully deleted product", 201)
 }
