@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/joho/godotenv"
+	godotenv "github.com/joho/godotenv"
 )
 
 var configurations *Config
@@ -17,40 +17,47 @@ type Config struct {
 	JwtSecretKey string
 }
 
-func LoadConfig() {
+func loadConfig() {
 	err := godotenv.Load()
 	if err != nil {
-		fmt.Println("Failed to load env variables:", err)
+		fmt.Println("Faild to load the env variables", err)
+		os.Exit(1)
 	}
+
 	version := os.Getenv("VERSION")
 
 	if version == "" {
-		fmt.Println("Version is requried")
+		fmt.Println("Version is required")
 		os.Exit(1)
 	}
 
 	serviceName := os.Getenv("SERVICE_NAME")
+
 	if serviceName == "" {
-		fmt.Println("service name is requried")
+		fmt.Println("Service name is required")
 		os.Exit(1)
 	}
 
 	httpPort := os.Getenv("HTTP_PORT")
+
 	if httpPort == "" {
-		fmt.Println("Http port is requried")
+		fmt.Println("Http Post is required")
 		os.Exit(1)
 	}
+
 	port, err := strconv.ParseInt(httpPort, 10, 64)
+
 	if err != nil {
 		fmt.Println("Port Must be Number")
 		os.Exit(1)
 	}
-
 	jwtSecretKey := os.Getenv("JWT_SECRET_KEY")
+
 	if jwtSecretKey == "" {
-		fmt.Println("Jwt secret key is requried")
+		fmt.Println("Jwt secret key is required")
 		os.Exit(1)
 	}
+
 	configurations = &Config{
 		Version:      version,
 		ServiceName:  serviceName,
@@ -61,7 +68,8 @@ func LoadConfig() {
 
 func GetConfig() *Config {
 	if configurations == nil {
-		LoadConfig()
+		loadConfig()
 	}
+
 	return configurations
 }

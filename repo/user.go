@@ -29,12 +29,13 @@ func (r userRepo) Create(user User) (*User, error) {
 	if user.ID != 0 {
 		return &user, nil
 	}
+
 	user.ID = len(r.users) + 1
 	r.users = append(r.users, user)
 	return &user, nil
 }
 
-func (r userRepo) Find(email, pass string) (*User, error) {
+func (r *userRepo) Find(email, pass string) (*User, error) {
 	for _, u := range r.users {
 		if u.Email == email && u.Password == pass {
 			return &u, nil
