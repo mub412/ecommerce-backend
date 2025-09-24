@@ -1,11 +1,19 @@
 package user
 
-import "ecommerce/rest/middlewares"
+import (
+	"ecommerce/config"
+	"ecommerce/repo"
+)
 
 type Handler struct {
-	middlewares *middlewares.Middlewares
+	//middlewares *middlewares.Manager
+	cnf      *config.Config
+	userRepo repo.UserRepo
 }
 
-func NewHandler(middlewares *middlewares.Middlewares) *Handler {
-	return &Handler{middlewares: middlewares}
+func NewHandler(cnf *config.Config, userRepo repo.UserRepo) *Handler {
+	return &Handler{
+		cnf:      cnf,
+		userRepo: userRepo,
+	}
 }

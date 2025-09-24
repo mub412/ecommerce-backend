@@ -10,7 +10,7 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux, manager *middlewares.Manage
 		"POST /users",
 		manager.With(
 			http.HandlerFunc(h.CreateUser),
-			h.middlewares.AuthenticateJWT,
+			//h.middlewares.AuthenticateJWT,
 		),
 	)
 	mux.Handle(
