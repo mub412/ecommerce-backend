@@ -1,6 +1,8 @@
 package middlewares
 
-import "ecommerce/config"
+import (
+	"ecommerce/config"
+)
 
 type Middlewares struct {
 	cnf *config.Config
